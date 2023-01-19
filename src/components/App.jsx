@@ -51,12 +51,29 @@ export class App extends Component {
   getVisibleContacts = () => {
     const { contacts, filter } = this.state;
     const normalizedFilter = filter.toLowerCase();
-
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
+  // componentDidMount() нужен для того что бы взять начальные значения с бекенда (fetch) и по ним сделать setState(), вызывается один раз
+  //Проверка (parsedContacts !== null) обязательна, что бы не упало приложение.
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+    if (parsedContacts !== null) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  // componentDidUpdate(prevProps, prevState) вызывается при каждом обновлении состояния или пропсов, нужен что бы записать,
+  // что то в localStorage или сделать новый запрос на сервер с другими параметрами
+  //(prevState.--- !== this.state.---) проверка обязательна, что бы не зациклить приложение, как при бесконечных циклах
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibleContacts();
@@ -87,69 +104,3 @@ export class App extends Component {
     );
   }
 }
-
-/*
-import { Component } from 'react';
-import Section from './Section';
-import FeedbackOptions from './FeedbackOptions';
-import Statistics from './Statistics';
-import Notification from './Notification';
-
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
-
-  onLeaveFeedback = option => {
-    this.setState({ [option]: this.state[option] + 1 });
-  };
-
-  countTotalFeedback = () =>
-    Object.values(this.state).reduce((value, acc) => (acc += value), 0);
-
-  countPositiveFeedbackPercentage = ({ good } = this.state) => {
-    return Math.round((good * 100) / this.countTotalFeedback() || 0);
-  };
-
-  render() {
-    const options = Object.keys(this.state);
-    const { good, neutral, bad } = this.state;
-
-    return (
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex-start',
-          padding: '40px',
-          flexDirection: 'column',
-          gap: '40px',
-          color: '#010101',
-        }}
-      >
-        <Section title={'Please leave feedback'}>
-          <FeedbackOptions
-            options={options}
-            onLeaveFeedback={this.onLeaveFeedback}
-          />
-        </Section>
-
-        {!this.countTotalFeedback() ? (
-          <Notification message="There is no feedback"></Notification>
-        ) : (
-          <Section title={'Statistics'}>
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              total={this.countTotalFeedback()}
-              positivePercentage={this.countPositiveFeedbackPercentage()}
-            />
-          </Section>
-        )}
-      </div>
-    );
-  }
-}
-**/

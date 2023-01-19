@@ -1,20 +1,17 @@
+import ContactItem from 'components/ContactItem';
 import PropTypes from 'prop-types';
-import {
-  ContactItem,
-  ContactListWrp,
-  ContactItemButton,
-} from './ContactList.styled';
+import { ContactListWrp } from './ContactList.styled';
+
 const ContactList = ({ contacts, onDeleteContact }) => (
   <ContactListWrp>
     {contacts.map(({ name, number, id }) => (
-      <ContactItem key={id}>
-        <p>
-          {name}: <span>{number}</span>
-        </p>
-        <ContactItemButton onClick={() => onDeleteContact(id)}>
-          delete
-        </ContactItemButton>
-      </ContactItem>
+      <li key={id}>
+        <ContactItem
+          name={name}
+          number={number}
+          onDeleteContact={() => onDeleteContact(id)}
+        />
+      </li>
     ))}
   </ContactListWrp>
 );

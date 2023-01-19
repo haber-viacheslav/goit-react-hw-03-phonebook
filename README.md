@@ -1,1 +1,1 @@
-### GoIT-react-hw-02-phonebook
+### GoIT-react-hw-03-phonebook
