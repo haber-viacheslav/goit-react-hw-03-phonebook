@@ -30,7 +30,7 @@ export class App extends Component {
     }
 
     this.setState(prevState => ({
-      contacts: [values, ...prevState.contacts],
+      contacts: [...prevState.contacts, values],
     }));
   };
 
@@ -70,9 +70,10 @@ export class App extends Component {
   //(prevState.--- !== this.state.---) проверка обязательна, что бы не зациклить приложение, как при бесконечных циклах
 
   componentDidUpdate(_, prevState) {
-    if (prevState.contacts !== this.state.contacts) {
+    if (true) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
+    // prevState.contacts !== this.state.contacts;
   }
   render() {
     const { filter } = this.state;
