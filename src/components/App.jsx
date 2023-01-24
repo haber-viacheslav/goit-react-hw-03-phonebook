@@ -56,8 +56,6 @@ export class App extends Component {
     );
   };
 
-  // componentDidMount() нужен для того что бы взять начальные значения с бекенда (fetch) и по ним сделать setState(), вызывается один раз
-  //Проверка (parsedContacts !== null) обязательна, что бы не упало приложение.
   componentDidMount() {
     const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
     if (parsedContacts !== null) {
@@ -65,15 +63,10 @@ export class App extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps, prevState) вызывается при каждом обновлении состояния или пропсов, нужен что бы записать,
-  // что то в localStorage или сделать новый запрос на сервер с другими параметрами
-  //(prevState.--- !== this.state.---) проверка обязательна, что бы не зациклить приложение, как при бесконечных циклах
-
   componentDidUpdate(_, prevState) {
-    if (true) {
+    if (prevState.contacts !== this.state.contacts) {
       localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
     }
-    // prevState.contacts !== this.state.contacts;
   }
   render() {
     const { filter } = this.state;
